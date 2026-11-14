@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getProjects, neighbours, projectPath, type Project } from '../../lib/projects';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => {
+    const { prev, next } = neighbours(projects, project);
+    return { params: { slug: project.id }, props: { project, prev, next } };
+  });
+}
+
+interface Props {
+  project: Project;
+  prev: Project | null;
+  next: Project | null;
+}
+
+const { project, prev, next } = Astro.props;
+const { title, summary, year, role, tags, link } = project.data;
+const { Content } = await render(project);
+
+const meta = [String(year), role, tags.join(' · ')].filter(Boolean);
+---
+
+<BaseLayout title={title} description={summary} path={projectPath(project)}>
+  <article class="article">
+    <p class="page-eyebrow">
+      <a href="/work/">Work</a> <span class="sep">/</span> {year}
+    </p>
+    <h1 class="page-title">{title}</h1>
+    <p class="page-standfirst">{summary}</p>
+
+    <p class="article-meta">
+      {meta.map((item, i) => (
+        <>{i > 0 && <span class="sep">/</span>}<span>{item}</span></>
+      ))}
+    </p>
+
+    <div class="prose"><Content /></div>
+
+    {link && (
+      <p class="article-link">
+        <a href={link} rel="noopener">Visit</a> <span aria-hidden="true">→</span>
+      </p>
+    )}
+
+    {(prev || next) && (
+      <nav class="pager" aria-label="More work">
+        {prev && (
+          <a class="pager-link" href={projectPath(prev)}>
+            <span class="dir">Previous</span>
+            <span class="to">{prev.data.title}</span>
+          </a>
+        )}
+        {next && (
+          <a class="pager-link next" href={projectPath(next)}>
+            <span class="dir">Next</span>
+            <span class="to">{next.data.title}</span>
+          </a>
+        )}
+      </nav>
+    )}
+  </article>
+</BaseLayout>

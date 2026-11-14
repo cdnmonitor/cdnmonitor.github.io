@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { getProjects, plural } from '../../lib/projects';
+
+const projects = await getProjects();
+---
+
+<BaseLayout title="Work" description="Case studies in software, fabrication and hardware." path="/work/">
+  <section class="hero">
+    <p class="page-eyebrow">Work <span class="sep">/</span> {plural(projects.length, 'project')}</p>
+    <h1>Case studies.</h1>
+    <div class="lede">
+      <p>Each entry is a markdown file: what the problem was, what was built, and what it cost.</p>
+    </div>
+  </section>
+
+  <section class="page-body">
+    <ul class="register">
+      {projects.map((project, i) => <ProjectRow project={project} index={i + 1} />)}
+    </ul>
+  </section>
+</BaseLayout>

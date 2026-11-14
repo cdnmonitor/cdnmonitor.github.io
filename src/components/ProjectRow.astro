@@ -1,0 +1,30 @@
+---
+/**
+ * One row of the work register: a numeral, the title and its one-line summary,
+ * the tags in the meta voice, and the year at the right edge. Text only — a
+ * frame without artwork is a hole, so the row is the typography.
+ */
+import { projectPath, type Project } from '../lib/projects';
+
+export interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const { title, summary, year, tags } = project.data;
+---
+
+<li>
+  <a class="row" href={projectPath(project)}>
+    <span class="row-num" aria-hidden="true">{String(index).padStart(2, '0')}</span>
+
+    <span class="row-main">
+      <span class="row-title">{title}</span>
+      <span class="row-summary">{summary}</span>
+      {tags.length > 0 && <span class="row-tags">{tags.join(' · ')}</span>}
+    </span>
+
+    <span class="row-meta">{year}</span>
+  </a>
+</li>

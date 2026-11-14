@@ -1,0 +1,55 @@
+/* ============================================================
+   FONTS — Geist reads, Iosevka Charon Mono labels.
+
+   Both families are static subsets (~10 KB a weight) checked into
+   public/fonts, so no network font request and no generator plumbing.
+   Rebuild with fontTools when the character set changes:
+
+     python3 -m fontTools.subset geist-400.ttf \
+       --unicodes="U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201A,U+201C-201E,U+2026,U+2192,U+00B7,U+00A9,U+2022,U+2039-203A,U+00AB,U+00BB,U+2212,U+00D7" \
+       --layout-features="kern,liga,tnum" --flavor=woff2 \
+       --output-file=public/fonts/geist-400.woff2
+   ============================================================ */
+
+/* Geist — the reading face. 400 body, 500 headings and UI, 600 strong. */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/geist-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/geist-500.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/geist-600.woff2') format('woff2');
+}
+
+/* Iosevka Charon Mono — labels and code only. 700 carries the labels,
+   400 carries code. */
+@font-face {
+  font-family: 'Iosevka Charon Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/iosevka-charon-400.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Iosevka Charon Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/iosevka-charon-700.woff2') format('woff2');
+}

@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+/**
+ * Standalone pages: every file in src/content/pages except `home`, which is
+ * the home page's copy. pages/about.md becomes /about/.
+ */
+export async function getStaticPaths() {
+  const pages = await getCollection('pages', ({ data }) => !data.draft);
+  return pages
+    .filter((page) => page.id !== 'home')
+    .map((page) => ({ params: { slug: page.id }, props: { page } }));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+---
+
+<BaseLayout title={page.data.title} description={page.data.summary} path={`/${page.id}/`}>
+  <article class="article">
+    <h1 class="page-title">{page.data.heading ?? page.data.title}</h1>
+    {page.data.summary && <p class="page-standfirst">{page.data.summary}</p>}
+    <div class="prose"><Content /></div>
+  </article>
+</BaseLayout>

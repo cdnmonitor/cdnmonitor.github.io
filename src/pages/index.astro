@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+import { getProjects, plural } from '../lib/projects';
+import { getEntry, render } from 'astro:content';
+import { site } from '../site.config';
+
+const projects = await getProjects();
+
+const home = await getEntry('pages', 'home');
+if (!home) throw new Error('[pages] missing src/content/pages/home.md');
+const { Content: Intro } = await render(home);
+---
+
+<BaseLayout title={site.name} path="/">
+  <section class="hero">
+    <p class="page-eyebrow">{site.role} <span class="sep">/</span> {site.location}</p>
+    <h1>{home.data.heading ?? home.data.title}</h1>
+    <div class="lede"><Intro /></div>
+  </section>
+
+  <section class="page-body" aria-labelledby="work-heading">
+    <div class="section-head">
+      <h2 class="section-title" id="work-heading">Selected work</h2>
+      <span class="section-rule" aria-hidden="true"></span>
+      <span class="section-count">{plural(projects.length, 'project')}</span>
+    </div>
+
+    <ul class="register">
+      {projects.map((project, i) => <ProjectRow project={project} index={i + 1} />)}
+    </ul>
+  </section>
+</BaseLayout>
