@@ -1,0 +1,32 @@
+---
+/**
+ * One row in a register (work, writing): a numeral, the title and its summary,
+ * optional tags in the meta voice, and a right-edge label (year, date).
+ * Text only — a frame without artwork is a hole, so the row is the typography.
+ */
+export interface Props {
+  href: string;
+  index: number;
+  title: string;
+  summary?: string;
+  tags?: string[];
+  /** Right-edge label: a year for projects, a date for posts. */
+  meta?: string;
+}
+
+const { href, index, title, summary, tags = [], meta } = Astro.props;
+---
+
+<li>
+  <a class="row" href={href}>
+    <span class="row-num" aria-hidden="true">{String(index).padStart(2, '0')}</span>
+
+    <span class="row-main">
+      <span class="row-title">{title}</span>
+      {summary && <span class="row-summary">{summary}</span>}
+      {tags.length > 0 && <span class="row-tags">{tags.join(' · ')}</span>}
+    </span>
+
+    {meta && <span class="row-meta">{meta}</span>}
+  </a>
+</li>

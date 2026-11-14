@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Row from '../../components/Row.astro';
+import { getPosts, postPath } from '../../lib/posts';
+import { formatDate } from '../../lib/site';
+
+const posts = await getPosts();
+---
+
+<BaseLayout title="Writing" description="Notes from building and running the machines." path="/blog/">
+  <section class="hero">
+    <p class="page-eyebrow">Writing <span class="sep">/</span> {posts.length} posts</p>
+    <h1>Notes from the work.</h1>
+    <div class="lede">
+      <p>Longer write-ups of things I run, broke, measured, and would do differently.</p>
+    </div>
+  </section>
+
+  <section class="page-body">
+    <ul class="register">
+      {posts.map((post, i) => (
+        <Row
+          href={postPath(post)}
+          index={i + 1}
+          title={post.data.title}
+          summary={post.data.summary}
+          tags={post.data.tags}
+          meta={formatDate(post.data.date)}
+        />
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

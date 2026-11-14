@@ -1,7 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectRow from '../../components/ProjectRow.astro';
-import { getProjects, plural } from '../../lib/projects';
+import Row from '../../components/Row.astro';
+import { getProjects, projectPath } from '../../lib/projects';
+import { plural } from '../../lib/site';
 
 const projects = await getProjects();
 ---
@@ -17,7 +18,16 @@ const projects = await getProjects();
 
   <section class="page-body">
     <ul class="register">
-      {projects.map((project, i) => <ProjectRow project={project} index={i + 1} />)}
+      {projects.map((project, i) => (
+        <Row
+          href={projectPath(project)}
+          index={i + 1}
+          title={project.data.title}
+          summary={project.data.summary}
+          tags={project.data.tags}
+          meta={String(project.data.year)}
+        />
+      ))}
     </ul>
   </section>
 </BaseLayout>

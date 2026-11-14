@@ -14,9 +14,10 @@ export const site = {
   email: 'michael@wpm.design',
 } as const;
 
-/** Fixed links in the top bar. Work is listed by its own index route. */
+/** Fixed links in the top bar. Each collection has its own index route. */
 export const primary = [
   { label: 'Work', href: '/work/' },
+  { label: 'Writing', href: '/blog/' },
   { label: 'About', href: '/about/' },
 ] as const;
 

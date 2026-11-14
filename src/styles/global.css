@@ -246,6 +246,9 @@ ol, ul { padding-left: 1.15em; }
 /* Bottom spacing for a page that ends on the register. */
 .page-body { padding-bottom: clamp(2.5rem, 2rem + 3vw, 4rem); }
 
+/* A section that is followed by another section, not by the footer. */
+.page-section { padding-bottom: clamp(2rem, 1.6rem + 2vw, 3rem); }
+
 /* ---------- Case study ---------- */
 .article {
   max-width: var(--measure);
@@ -280,6 +283,10 @@ ol, ul { padding-left: 1.15em; }
   color: var(--faint);
   font-variant-numeric: tabular-nums;
 }
+/* Date and read time stay on one line; tags are their own group, so a wrapped
+   byline never leaves a separator dangling at the end of a line. */
+.article-meta .meta-when { display: inline-flex; gap: 0.5rem; white-space: nowrap; }
+.article-meta .meta-tags { min-width: 0; }
 .article-meta .sep { color: var(--line); }
 
 /* ---------- Prose: rendered markdown ---------- */
@@ -365,12 +372,15 @@ ol, ul { padding-left: 1.15em; }
 }
 
 .prose table {
-  /* A wide table (long paths, hashes) must scroll inside its column on a
-     phone rather than pushing the document sideways. `display: block` is the
-     only wrapper-free way to get an overflow context on a markdown table. */
+  /* Data tables break out of the reading measure to the shell width: four
+     columns in a 36rem column wrap every cell onto three lines and lose their
+     alignment. Same maths as a wide block — derived from the shell token,
+     never its own literal — and it collapses back to the column on a phone. */
   display: block;
-  width: 100%;
-  max-width: 100%;
+  --wide: calc(min(var(--shell), 100vw) - 2 * var(--wide-pad));
+  width: max(100%, var(--wide));
+  max-width: none;
+  margin-inline: calc((100% - max(100%, var(--wide))) / 2);
   overflow-x: auto;
   border-collapse: collapse;
   font-size: 0.9375rem;

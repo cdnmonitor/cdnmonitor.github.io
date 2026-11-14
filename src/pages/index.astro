@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProjectRow from '../components/ProjectRow.astro';
-import { getProjects, plural } from '../lib/projects';
+import Row from '../components/Row.astro';
+import { getProjects, projectPath } from '../lib/projects';
+import { getPosts, postPath } from '../lib/posts';
+import { formatDate, plural } from '../lib/site';
 import { getEntry, render } from 'astro:content';
 import { site } from '../site.config';
 
-const projects = await getProjects();
+const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
 
 const home = await getEntry('pages', 'home');
 if (!home) throw new Error('[pages] missing src/content/pages/home.md');
@@ -19,7 +21,7 @@ const { Content: Intro } = await render(home);
     <div class="lede"><Intro /></div>
   </section>
 
-  <section class="page-body" aria-labelledby="work-heading">
+  <section class="page-section" aria-labelledby="work-heading">
     <div class="section-head">
       <h2 class="section-title" id="work-heading">Selected work</h2>
       <span class="section-rule" aria-hidden="true"></span>
@@ -27,7 +29,39 @@ const { Content: Intro } = await render(home);
     </div>
 
     <ul class="register">
-      {projects.map((project, i) => <ProjectRow project={project} index={i + 1} />)}
+      {projects.map((project, i) => (
+        <Row
+          href={projectPath(project)}
+          index={i + 1}
+          title={project.data.title}
+          summary={project.data.summary}
+          tags={project.data.tags}
+          meta={String(project.data.year)}
+        />
+      ))}
     </ul>
   </section>
+
+  {posts.length > 0 && (
+    <section class="page-body" aria-labelledby="writing-heading">
+      <div class="section-head">
+        <h2 class="section-title" id="writing-heading">Writing</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count">{plural(posts.length, 'post')}</span>
+      </div>
+
+      <ul class="register">
+        {posts.slice(0, 3).map((post, i) => (
+          <Row
+            href={postPath(post)}
+            index={i + 1}
+            title={post.data.title}
+            summary={post.data.summary}
+            tags={post.data.tags}
+            meta={formatDate(post.data.date)}
+          />
+        ))}
+      </ul>
+    </section>
+  )}
 </BaseLayout>
