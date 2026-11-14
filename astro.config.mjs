@@ -22,4 +22,11 @@ export default defineConfig({
   },
 
   trailingSlash: 'ignore',
+
+  server: {
+    // Dev and preview reject requests whose Host header is not recognised
+    // (403 "Blocked request"). Allow tailnet names so the site can be viewed
+    // from a phone over Tailscale: http://<machine>.<tailnet>.ts.net:4321/.
+    allowedHosts: ['.ts.net'],
+  },
 });
