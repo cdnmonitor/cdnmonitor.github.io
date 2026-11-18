@@ -12,7 +12,7 @@ export const site = {
     'Michael Bishai, interdisciplinary engineer in Los Angeles. Founder of wpm design; hardware, firmware, fabrication and assistive-technology research.',
   location: 'Los Angeles, California · PST',
   /** Absolute origin, used for canonical URLs and Open Graph tags. */
-  url: 'https://example.com',
+  url: 'https://cdnmonitor.github.io/',
   email: 'michael@wpm.design',
 } as const;
 

@@ -5,13 +5,15 @@ import rehypeWrapTables from './src/lib/rehype-wrap-tables.mjs';
 import rehypeBaseLinks from './src/lib/rehype-base-links.mjs';
 
 // Where the site is mounted. Local preview and the Tailscale preview serve the
-// domain root; the GitHub Pages project site is served from /<repo>/, so the
-// deploy workflow sets SITE_BASE. Every route and every root-absolute link is
-// generated through BASE_URL, so no content or template hardcodes either case.
+// domain root, and so does the deployed user site (cdnmonitor.github.io). A
+// project-site deploy would set SITE_BASE=/<repo>; every route and every
+// root-absolute link is generated through BASE_URL, so no content or template
+// hardcodes either case.
 const base = process.env.SITE_BASE ?? '/';
 
-// Absolute origin for canonical and Open Graph URLs. Overridden per deploy.
-const site = process.env.SITE_URL ?? 'https://example.com';
+// Absolute origin for canonical and Open Graph URLs. The deploy workflow passes
+// SITE_URL; the default is the deployed user site.
+const site = process.env.SITE_URL ?? 'https://cdnmonitor.github.io';
 
 export default defineConfig({
   site,

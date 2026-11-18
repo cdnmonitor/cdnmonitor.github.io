@@ -39,9 +39,12 @@ jobs:
       - name: Type-check
         run: pnpm run check
 
+      # A user site (<owner>.github.io) is served from the domain root; every
+      # other repo name is a project site served from /<repo>/. Same build, one
+      # switch — nothing in src/ knows which case it is.
       - name: Build
         env:
-          SITE_BASE: /${{ github.event.repository.name }}
+          SITE_BASE: ${{ endsWith(github.event.repository.name, '.github.io') && '/' || format('/{0}', github.event.repository.name) }}
           SITE_URL: https://${{ github.repository_owner }}.github.io
         run: pnpm run build
 
