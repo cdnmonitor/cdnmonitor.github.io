@@ -1,67 +1,56 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Row from '../components/Row.astro';
-import { getProjects, projectPath } from '../lib/projects';
-import { getPosts, postPath } from '../lib/posts';
-import { formatDate, plural } from '../lib/site';
+import { Image } from 'astro:assets';
+import heroPortrait from '../assets/hero-portrait.jpg';
 import { getEntry, render } from 'astro:content';
+import { getExperiences, experiencePath } from '../lib/experience';
 import { site } from '../site.config';
+import { basePath } from '../lib/site';
 
-const [projects, posts] = await Promise.all([getProjects(), getPosts()]);
-
-const home = await getEntry('pages', 'home');
+const [home, experiences] = await Promise.all([getEntry('pages', 'home'), getExperiences()]);
 if (!home) throw new Error('[pages] missing src/content/pages/home.md');
+
 const { Content: Intro } = await render(home);
 ---
 
-<BaseLayout title={site.name} path="/">
-  <section class="hero">
-    <p class="page-eyebrow">{site.role} <span class="sep">/</span> {site.location}</p>
-    <h1>{home.data.heading ?? home.data.title}</h1>
-    <div class="lede"><Intro /></div>
+<BaseLayout title={site.name} path={basePath('/')}>
+  <section class="hero hero-split">
+    <div class="hero-text">
+      <h1>{home.data.heading ?? home.data.title}</h1>
+      <div class="lede"><Intro /></div>
+    </div>
+
+    {/* Portrait for the intro. Served as a hash-named WebP at the widths the
+        column can actually use (17.5rem is its cap). */}
+    <div class="hero-media">
+      <Image
+        src={heroPortrait}
+        alt="Michael Bishai in the shop between machines, holding a machined aluminum part in one hand and a finished keyboard in the other, with the Haas Mini Mill behind him."
+        widths={[320, 480, 640, 800]}
+        sizes="(max-width: 48rem) 16rem, (max-width: 64rem) 20vw, 17.5rem"
+        format="webp" quality={65}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
   </section>
 
-  <section class="page-section" aria-labelledby="work-heading">
+  <section class="page-body" aria-labelledby="experience-heading">
     <div class="section-head">
-      <h2 class="section-title" id="work-heading">Selected work</h2>
-      <span class="section-rule" aria-hidden="true"></span>
-      <span class="section-count">{plural(projects.length, 'project')}</span>
+      <h2 class="section-title" id="experience-heading">Experience &amp; research</h2>
     </div>
 
     <ul class="register">
-      {projects.map((project, i) => (
+      {experiences.map((experience) => (
         <Row
-          href={projectPath(project)}
-          index={i + 1}
-          title={project.data.title}
-          summary={project.data.summary}
-          tags={project.data.tags}
-          meta={String(project.data.year)}
+          href={experiencePath(experience)}
+          title={experience.data.title}
+          summary={experience.data.summary}
+          tags={[experience.data.role]}
+          meta={experience.data.years}
         />
       ))}
     </ul>
   </section>
-
-  {posts.length > 0 && (
-    <section class="page-body" aria-labelledby="writing-heading">
-      <div class="section-head">
-        <h2 class="section-title" id="writing-heading">Writing</h2>
-        <span class="section-rule" aria-hidden="true"></span>
-        <span class="section-count">{plural(posts.length, 'post')}</span>
-      </div>
-
-      <ul class="register">
-        {posts.slice(0, 3).map((post, i) => (
-          <Row
-            href={postPath(post)}
-            index={i + 1}
-            title={post.data.title}
-            summary={post.data.summary}
-            tags={post.data.tags}
-            meta={formatDate(post.data.date)}
-          />
-        ))}
-      </ul>
-    </section>
-  )}
 </BaseLayout>

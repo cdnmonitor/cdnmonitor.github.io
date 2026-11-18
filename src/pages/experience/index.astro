@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Row from '../../components/Row.astro';
+import { getExperiences, experiencePath } from '../../lib/experience';
+import { basePath } from '../../lib/site';
+
+const experiences = await getExperiences();
+---
+
+<BaseLayout
+  title="Experience"
+  description="Companies and research Michael Bishai has run or worked in."
+  path={basePath('/experience/')}
+>
+  <section class="hero">
+    <h1>Companies &amp; research.</h1>
+    <div class="lede">
+      <p>
+        The businesses I have run and the lab I worked in, one article each: what was
+        built, what it cost, and what it taught me.
+      </p>
+    </div>
+  </section>
+
+  <section class="page-body">
+    <ul class="register">
+      {experiences.map((experience) => (
+        <Row
+          href={experiencePath(experience)}
+          title={experience.data.title}
+          summary={experience.data.summary}
+          tags={[experience.data.role]}
+          meta={experience.data.years}
+        />
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

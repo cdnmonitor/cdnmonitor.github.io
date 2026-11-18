@@ -29,10 +29,17 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--sans);
-  font-size: clamp(0.9375rem, 0.9rem + 0.15vw, 1rem);
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.125rem);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* A column the height of the window, so the footer sits on the bottom edge
+     even on a page with three lines of text. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 img, svg, video { display: block; max-width: 100%; height: auto; }
@@ -51,11 +58,18 @@ ol, ul { padding-left: 1.15em; }
 
 /* ---------- Shell ---------- */
 .shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
   width: 100%;
   max-width: var(--shell);
   margin: 0 auto;
   padding: 0 var(--wide-pad);
 }
+
+/* The slot that eats the slack: short pages leave the footer at the bottom of
+   the window, long ones push it past the fold as usual. */
+main { flex: 1 1 auto; }
 
 /* ---------- Top bar ---------- */
 .site-head {
@@ -68,7 +82,6 @@ ol, ul { padding-left: 1.15em; }
 }
 
 .wordmark {
-  font-size: 1rem;
   font-weight: 500;
   letter-spacing: -0.015em;
   transition: opacity var(--dur) var(--ease);
@@ -84,7 +97,6 @@ ol, ul { padding-left: 1.15em; }
   font-weight: var(--meta-weight);
   font-size: var(--meta-size);
   letter-spacing: var(--meta-track);
-  text-transform: uppercase;
 }
 /* One ink for every item. The current page is marked by the rule under it —
    colour differences read as two states where there is one. */
@@ -115,8 +127,6 @@ ol, ul { padding-left: 1.15em; }
   max-width: 18ch;
 }
 
-.hero .page-eyebrow { margin-bottom: 0.9rem; }
-
 .hero .lede {
   max-width: 34rem;
   margin-top: 1.1rem;
@@ -127,25 +137,75 @@ ol, ul { padding-left: 1.15em; }
 }
 .hero .lede > * + * { margin-top: 0.9em; }
 
+/* Links inside the lede follow the prose treatment: they are the only ink on
+   the page that is not body text, so they must be visible without colour. */
+.hero .lede a {
+  color: var(--fg);
+  border-bottom: 1px solid color-mix(in srgb, var(--fg) 30%, transparent);
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.hero .lede a:hover {
+  border-bottom-color: var(--fg);
+  background: var(--accent-dim);
+}
+
+/* ---------- Hero with an image on the right ----------
+   .hero-split is the home page only: the intro holds a column on the left and a
+   portrait sits against the right edge of the shell, top-aligned with the
+   headline. Below 48rem the image drops under the text at a smaller width, so
+   the intro is never squeezed by a photo. */
+.hero-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) clamp(12rem, 27vw, 22rem);
+  gap: clamp(1.5rem, 1rem + 3vw, 3.25rem);
+  /* Bottom-aligned: the portrait keeps its own 0.82 shape (no ceiling) and
+     shares the intro's last line as its bottom edge. */
+  align-items: end;
+}
+
+.hero-media { width: 100%; }
+
+/* The source is cropped 0.82, the column's own shape, so nothing is trimmed
+   from the sides and no ceiling is left at the top. */
+.hero-media img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--card);
+}
+
+@media (max-width: 48rem) {
+  .hero-split { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .hero-media { max-width: 16rem; height: auto; }
+  .hero-media img { height: auto; }
+}
+
 /* ---------- Meta voice ---------- */
-.page-eyebrow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.5rem;
-  color: var(--faint);
+
+/* ---------- Back link above an article head ---------- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-bottom: 1.1rem;
+  color: var(--muted);
   font-family: var(--meta);
   font-weight: var(--meta-weight);
   font-size: var(--meta-size);
   letter-spacing: var(--meta-track);
-  font-variant-numeric: tabular-nums;
-  text-transform: uppercase;
+  transition: color var(--dur) var(--ease);
 }
-.page-eyebrow a { color: var(--muted); transition: color var(--dur) var(--ease); }
-.page-eyebrow a:hover { color: var(--fg); }
-.page-eyebrow .sep { color: var(--line); }
+.back-link .arrow {
+  font-size: 1.1em;
+  line-height: 1;
+  transition: translate var(--dur) var(--ease);
+}
+.back-link:hover { color: var(--fg); }
+.back-link:hover .arrow { translate: -0.18em 0; }
 
-/* ---------- Section head: label, rule, count ---------- */
+/* ---------- Section head: a label over its register ---------- */
 .section-head {
   display: flex;
   align-items: center;
@@ -155,24 +215,10 @@ ol, ul { padding-left: 1.15em; }
 
 .section-title {
   font-family: var(--meta);
-  font-size: 0.625rem;
-  font-weight: 400;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-size: var(--meta-size);
+  font-weight: var(--meta-weight);
+  letter-spacing: var(--meta-track);
   color: var(--muted);
-  white-space: nowrap;
-}
-
-.section-rule { flex: 1 1 auto; height: 1px; background: var(--line); }
-
-.section-count {
-  font-family: var(--meta);
-  font-size: 0.625rem;
-  font-weight: 400;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-  color: var(--faint);
-  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
@@ -186,7 +232,7 @@ ol, ul { padding-left: 1.15em; }
 
 .row {
   display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: baseline;
   gap: 0 1.25rem;
   padding: 1.05rem 0.6rem;
@@ -197,18 +243,15 @@ ol, ul { padding-left: 1.15em; }
 }
 .row:hover { background: var(--card); }
 
-.row-num,
 .row-meta {
   font-family: var(--meta);
   font-weight: var(--meta-weight);
   font-size: var(--meta-size);
   letter-spacing: var(--meta-track);
   font-variant-numeric: tabular-nums;
-  text-transform: uppercase;
   color: var(--faint);
   transition: color var(--dur) var(--ease);
 }
-.row:hover .row-num { color: var(--fg); }
 
 .row-main { display: block; min-width: 0; }
 
@@ -226,7 +269,6 @@ ol, ul { padding-left: 1.15em; }
   display: block;
   margin-top: 0.25rem;
   color: var(--muted);
-  font-size: 0.9375rem;
   line-height: 1.5;
   max-width: 34rem;
   text-wrap: pretty;
@@ -239,7 +281,6 @@ ol, ul { padding-left: 1.15em; }
   font-size: var(--meta-size);
   font-weight: var(--meta-weight);
   letter-spacing: var(--meta-track);
-  text-transform: uppercase;
   color: var(--faint);
 }
 
@@ -248,6 +289,101 @@ ol, ul { padding-left: 1.15em; }
 
 /* A section that is followed by another section, not by the footer. */
 .page-section { padding-bottom: clamp(2rem, 1.6rem + 2vw, 3rem); }
+
+/* ---------- Capabilities: one discipline per block ----------
+   The register's grammar without the link: a title, the one-line claim, the
+   toolchain in the meta voice, then the paragraph and the proof it links to.
+   Hairlines do the separating, so no card is needed. */
+.cap-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  padding-bottom: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+.cap-index a {
+  color: var(--muted);
+  border-bottom: 1px solid transparent;
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.cap-index a:hover {
+  color: var(--fg);
+  border-bottom-color: var(--fg);
+}
+
+.capabilities { border-top: 1px solid var(--line); }
+
+.capability {
+  padding: clamp(1.5rem, 1.2rem + 1vw, 2.1rem) 0 clamp(1.7rem, 1.4rem + 1vw, 2.3rem);
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 2rem;
+  /* Text left, artwork right. A discipline with no image keeps the single
+     column it always had, so the page does not get one padded half-row. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.3rem clamp(1.5rem, 1rem + 2vw, 3rem);
+  align-items: start;
+}
+
+@media (min-width: 48rem) {
+  /* The tile is a share of the row, not a fixed stamp. A fixed 11-17rem column
+     left the image starved beside a full-width text column at 800-900px, which
+     is where it looked worst. */
+  .capability.has-image {
+    grid-template-columns: minmax(0, 1fr) clamp(12rem, 32%, 20rem);
+  }
+}
+
+.capability-text { min-width: 0; }
+
+.capability-figure {
+  margin: 0;
+  /* Stacked under the prose, the tile takes the column's full width instead of
+     hanging at the right edge at thumbnail size. */
+  width: 100%;
+  justify-self: end;
+  /* One ratio for every tile. 9:10 is set by the store screenshot: it is the
+     closest common shape to a page capture, so the screenshot shows whole with
+     nothing padded or cropped, and the photographs are cut to the same ratio.
+     The assets are exported at this ratio themselves; object-fit is a safety
+     net for any future image that is not. */
+  aspect-ratio: 9 / 10;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--r-media);
+  background: var(--card);
+}
+
+/* Same frame the prose photos get, so a capability image reads as part of the
+   same site rather than as a pasted-in thumbnail. */
+.capability-figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.capability-title {
+  font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.4375rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.capability-summary {
+  margin-top: 0.4rem;
+  max-width: 34rem;
+  color: var(--muted);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.capability .prose {
+  margin-top: 1rem;
+  max-width: 36rem;
+}
+.capability .prose > * + * { margin-top: 1em; }
 
 /* ---------- Case study ---------- */
 .article {
@@ -267,6 +403,22 @@ ol, ul { padding-left: 1.15em; }
   text-wrap: pretty;
 }
 
+/* Time over role, straight under the venture title: two lines, medium weight,
+   full ink — close enough to the title to belong to it, plain enough not to
+   compete with the summary below. */
+.article-subtitle {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.3rem;
+  margin-top: 0.9rem;
+  color: var(--fg);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
 .article-meta {
   display: flex;
   flex-wrap: wrap;
@@ -279,7 +431,6 @@ ol, ul { padding-left: 1.15em; }
   font-size: var(--meta-size);
   font-weight: var(--meta-weight);
   letter-spacing: var(--meta-track);
-  text-transform: uppercase;
   color: var(--faint);
   font-variant-numeric: tabular-nums;
 }
@@ -356,12 +507,36 @@ ol, ul { padding-left: 1.15em; }
 .prose pre code { font: inherit; }
 
 /* Colocated markdown images are optimised by Astro; files in public/ come
-   through untouched. Either way they need a frame. */
+   through untouched. Either way they need a frame.
+   A photo may run wider than the reading column but not the full page — 36rem
+   reads as a thumbnail, the whole shell turns the backdrop into the subject.
+   --media is the cap; the negative margins centre it against the column and
+   collapse to nothing on a phone. */
 .prose img {
+  --wide: calc(min(var(--shell), 100vw) - 2 * var(--wide-pad));
+  /* Two caps, and whichever bites first wins: width, and height, because a
+     portrait photo at 44rem wide is nearly a full screen tall and takes over
+     the page. Centring is margin-left 50% plus a -50% translate rather than
+     auto margins — the image can be WIDER than the text column (the landscape
+     breakout), and auto margins cannot centre an overflowing box. */
+  max-width: min(var(--media), var(--wide));
+  max-height: 30rem;
+  width: auto;
+  height: auto;
+  margin-inline: 0;
+  margin-left: 50%;
+  translate: -50% 0;
   border: 1px solid var(--line);
   border-radius: var(--r-media);
   background: var(--card);
-  margin-inline: auto;
+}
+
+/* Post cards are tall on purpose: a post's words above its own screenshot. The
+   30rem height cap would shrink one to a third of the column and turn the
+   screenshot text into noise, so they keep their width and let the height
+   follow. No other image on the site needs this. */
+.prose img[src*='/img/tweet-'] {
+  max-height: none;
 }
 
 .prose hr {
@@ -371,19 +546,27 @@ ol, ul { padding-left: 1.15em; }
   background: var(--line);
 }
 
-.prose table {
-  /* Data tables break out of the reading measure to the shell width: four
-     columns in a 36rem column wrap every cell onto three lines and lose their
-     alignment. Same maths as a wide block — derived from the shell token,
-     never its own literal — and it collapses back to the column on a phone. */
-  display: block;
+/* Data tables break out of the reading measure to the shell width: four
+   columns in a 36rem column wrap every cell onto three lines and lose their
+   alignment. Same maths as a wide block — derived from the shell token, never
+   its own literal — and it collapses back to the column on a phone.
+   The scroll box is the wrapper, not the table: `display: block` on a table
+   discards its table box and pins the rows to the left edge of the band, so a
+   table narrower than the band hangs out left of the text column with dead
+   space on the right. The wrapper centres, the table fills it. */
+.prose .table-wrap {
   --wide: calc(min(var(--shell), 100vw) - 2 * var(--wide-pad));
   width: max(100%, var(--wide));
-  max-width: none;
   margin-inline: calc((100% - max(100%, var(--wide))) / 2);
   overflow-x: auto;
+}
+.prose table {
+  /* Natural width, centred in the band. Stretching it to the band width spreads
+     three short columns across 935px of gutter. A table wider than the band
+     still overflows the wrapper and scrolls, which is the point of the band. */
+  width: auto;
+  margin-inline: auto;
   border-collapse: collapse;
-  font-size: 0.9375rem;
 }
 .prose th,
 .prose td {
@@ -397,7 +580,6 @@ ol, ul { padding-left: 1.15em; }
   font-weight: var(--meta-weight);
   font-size: var(--meta-size);
   letter-spacing: var(--meta-track);
-  text-transform: uppercase;
 }
 
 .article-link {
@@ -409,10 +591,10 @@ ol, ul { padding-left: 1.15em; }
   font-size: var(--meta-size);
   font-weight: var(--meta-weight);
   letter-spacing: var(--meta-track);
-  text-transform: uppercase;
 }
 .article-link a { border-bottom: 1px solid var(--line); transition: border-color var(--dur) var(--ease); }
 .article-link a:hover { border-bottom-color: var(--fg); }
+
 
 /* ---------- Pager ---------- */
 .pager {
@@ -447,10 +629,8 @@ ol, ul { padding-left: 1.15em; }
   font-weight: var(--meta-weight);
   font-size: var(--meta-size);
   letter-spacing: var(--meta-track);
-  text-transform: uppercase;
 }
 .pager-link .to {
-  font-size: 0.9375rem;
   line-height: 1.35;
   text-wrap: pretty;
 }
@@ -472,8 +652,7 @@ ol, ul { padding-left: 1.15em; }
   font-family: var(--meta);
   font-weight: var(--meta-weight);
   font-size: var(--meta-size);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: var(--meta-track);
 }
 .site-foot a { color: var(--muted); transition: color var(--dur) var(--ease); }
 .site-foot a:hover { color: var(--fg); }
@@ -499,10 +678,100 @@ ol, ul { padding-left: 1.15em; }
 
 /* ---------- Small screens ---------- */
 @media (max-width: 34rem) {
-  .row { grid-template-columns: 1.9rem minmax(0, 1fr); gap: 0 0.9rem; }
+  .row { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .row-meta { display: none; }
   .pager { grid-template-columns: minmax(0, 1fr); }
   .pager-link.next { text-align: left; align-items: flex-start; }
+}
+
+/* ============================================================
+   PAGE TRANSITIONS
+
+   The router in BaseLayout fetches the next page and runs the swap inside
+   document.startViewTransition, so a navigation is one document changing
+   rather than a reload.
+
+   The choreography is a stagger, not a morph. Two elements keep their own
+   geometry and are never scaled into one another — that is what made the
+   earlier version look broken: a full-width row and a narrow stacked header
+   have nothing in common but their text, so anything shared between them
+   double-exposes the words at two sizes. Instead:
+     1. the row you clicked lifts and dissolves          (entry-row, old side)
+     2. the article head rises in behind it              (entry-head, new side)
+     3. the article body follows                         (venture-body, new side)
+   Each has a different name, so no group ever holds two snapshots of the same
+   content.
+
+   Everything below is the paint. @view-transition is belt and braces for a
+   full load in Chrome (Firefox and Safari skip that rule); without the router
+   — no JavaScript, or an old browser — the fade simply does not happen and
+   navigation is instant.
+   ============================================================ */
+@view-transition { navigation: auto; }
+
+/* The page: a short fade with a small rise, on the register's curve. */
+::view-transition-old(root) { animation: page-out 160ms var(--ease) both; }
+::view-transition-new(root) { animation: page-in 220ms var(--ease) both; }
+
+/* 1. The row lifts out of the register. The name is set on :hover /
+   :focus-visible so exactly one row carries it — a repeated name aborts the
+   whole transition. */
+.row:hover,
+.row:focus-visible { view-transition-name: entry-row; }
+
+::view-transition-old(entry-row) { animation: row-out 200ms var(--ease) both; }
+
+/* 2. The article head rises in, a beat after the row has left. */
+::view-transition-new(entry-head) { animation: rise-in 220ms var(--ease) 80ms both; }
+
+/* 3. The body arrives once the head is up. */
+::view-transition-new(venture-body) { animation: rise-in 220ms var(--ease) 200ms both; }
+
+/* ---- The way back mirrors the way in -------------------------------------
+   Leaving an article, the head you arrived with lifts away, the body follows
+   it, and the register row you came from rises into place. `return-row` is put
+   on that row by the script in ventures/[slug].astro, on the incoming document
+   at before-swap time — the only place that still knows which article is being
+   left. Each of these names exists on one side only, so nothing morphs. */
+::view-transition-old(entry-head) { animation: head-out 220ms var(--ease) both; }
+::view-transition-old(venture-body) { animation: body-out 220ms var(--ease) 60ms both; }
+::view-transition-new(return-row) { animation: row-settle 340ms var(--ease) 80ms both; }
+
+@keyframes page-out {
+  to { opacity: 0; }
+}
+@keyframes page-in {
+  from { opacity: 0; translate: 0 8px; }
+}
+
+/* A short hold so the rise is seen, then dissolve. */
+@keyframes row-out {
+  0% { opacity: 1; translate: 0 0; }
+  40% { opacity: 1; translate: 0 -10px; }
+  100% { opacity: 0; translate: 0 -28px; }
+}
+@keyframes rise-in {
+  from { opacity: 0; translate: 0 14px; }
+}
+@keyframes head-out {
+  to { opacity: 0; translate: 0 -26px; }
+}
+@keyframes body-out {
+  to { opacity: 0; translate: 0 -10px; }
+}
+@keyframes row-settle {
+  from { opacity: 0; translate: 0 -26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-old(entry-row),
+  ::view-transition-new(entry-head),
+  ::view-transition-new(venture-body),
+  ::view-transition-old(entry-head),
+  ::view-transition-old(venture-body),
+  ::view-transition-new(return-row) { animation: none !important; }
 }
 
 /* ============================================================
@@ -534,7 +803,6 @@ ol, ul { padding-left: 1.15em; }
   .article { max-width: none; padding: 0; margin: 0; }
 
   h1, .page-title { font-size: 20pt; margin-top: 0; font-weight: 500; }
-  .page-eyebrow { display: none; }
   .page-standfirst { font-size: 11pt; margin-top: 0.35rem; }
 
   .prose { margin-top: 1rem; }
@@ -544,6 +812,6 @@ ol, ul { padding-left: 1.15em; }
   .prose h2, .prose h3 { break-after: avoid; }
   .prose li, .prose blockquote, .prose pre { break-inside: avoid; }
   .prose a { border-bottom: 0; text-decoration: underline; }
-  .prose img { break-inside: avoid; max-height: 70mm; width: auto; }
+  .prose img { break-inside: avoid; max-height: 70mm; width: auto; max-width: 100%; margin-left: 0; translate: none; }
   .row { animation: none; }
 }

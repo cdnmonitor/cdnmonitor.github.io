@@ -1,9 +1,10 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { basePath } from './site';
 
 export type Post = CollectionEntry<'posts'>;
 
 /** Filename is the URL: `posts/homelab.md` -> `/blog/homelab/`. */
-export const postPath = (post: Post) => `/blog/${post.id}/`;
+export const postPath = (post: Post) => basePath(`/blog/${post.id}/`);
 
 /** Newest first. The only place posts are read for listing. */
 export async function getPosts(): Promise<Post[]> {

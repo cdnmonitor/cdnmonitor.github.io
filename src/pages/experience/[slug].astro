@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getExperiences, experienceNeighbours, experiencePath, type Experience } from '../../lib/experience';
+import { basePath } from '../../lib/site';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const experiences = await getExperiences();
+  return experiences.map((experience) => {
+    const { prev, next } = experienceNeighbours(experiences, experience);
+    return { params: { slug: experience.id }, props: { experience, prev, next } };
+  });
+}
+
+interface Props {
+  experience: Experience;
+  prev: Experience | null;
+  next: Experience | null;
+}
+
+const { experience, prev, next } = Astro.props;
+const { title, summary, role, years, link, linkLabel } = experience.data;
+const { Content } = await render(experience);
+---
+
+<BaseLayout title={title} description={summary} path={experiencePath(experience)}>
+  <article class="article">
+    {/* Back to the register, not a breadcrumb: the years already live in the
+        meta line under the title, so repeating them here said nothing twice. */}
+    <a class="back-link" href={basePath('/experience/')}>
+      <span class="arrow" aria-hidden="true">←</span> Back
+    </a>
+
+    {/* Named for the entrance only — the row it came from has a different
+        name, so the two are never scaled into one another (see the transition
+        notes in global.css). */}
+    <header class="article-head" style="view-transition-name: entry-head">
+      <h1 class="page-title">{title}</h1>
+      <p class="article-subtitle">
+        <span class="sub-when">{years}</span>
+        <span class="sub-role">{role}</span>
+      </p>
+      <p class="page-standfirst">{summary}</p>
+    </header>
+
+    {/* Named on its own so it can arrive late: the body waits for the head to
+        land, then fades up. The name exists only on the article, so there is
+        nothing on the old page to morph from. */}
+    <div class="article-body" style="view-transition-name: experience-body">
+      <div class="prose"><Content /></div>
+
+      {link && (
+        <p class="article-link">
+          <a class={linkLabel?.startsWith('@') ? 'handle' : undefined} href={link} rel="noopener">
+            {linkLabel ?? 'Visit'}
+          </a> <span aria-hidden="true">→</span>
+        </p>
+      )}
+
+      {(prev || next) && (
+        <nav class="pager" aria-label="More experience">
+          {prev && (
+            <a class={`pager-link${next ? '' : ' solo'}`} href={experiencePath(prev)}>
+              <span class="dir">Previous</span>
+              <span class="to">{prev.data.title}</span>
+            </a>
+          )}
+          {next && (
+            <a class={`pager-link next${prev ? '' : ' solo'}`} href={experiencePath(next)}>
+              <span class="dir">Next</span>
+              <span class="to">{next.data.title}</span>
+            </a>
+          )}
+        </nav>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<script>
+  // The way back mirrors the way in. Before the router swaps documents, name
+  // the register row this article came from so it can rise into place instead
+  // of arriving with the rest of the page. This is the only moment the slug is
+  // still known: after the swap, the URL is the register.
+  import { basePath } from '../../lib/site';
+
+  const registerPath = basePath('/experience/');
+
+  document.addEventListener('astro:before-swap', (event) => {
+    const { to, newDocument } = event as Event & { to: URL; newDocument: Document };
+    if (to.pathname !== registerPath) return;
+
+    const slug = location.pathname.replace(/\/+$/, '').split('/').pop();
+    const row = newDocument.querySelector(`a.row[href="${basePath(`/experience/${slug}/`)}"]`);
+    row?.setAttribute('style', 'view-transition-name: return-row');
+  });
+</script>

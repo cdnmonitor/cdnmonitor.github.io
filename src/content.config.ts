@@ -24,6 +24,8 @@ const projects = defineCollection({
     draft: z.boolean().default(false),
     /** External link shown at the foot of the case study. */
     link: z.string().url().optional(),
+    /** What that link says. Defaults to "Visit". */
+    linkLabel: z.string().optional(),
   }),
 });
 
@@ -61,4 +63,52 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { projects, posts, pages };
+/**
+ * AN EXPERIENCE is one markdown file in src/content/experience/: a company or lab
+ * with its own article at /experience/<file name>/. The frontmatter is what the
+ * register and the article header need; the body is the article itself.
+ */
+const experience = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/experience' }),
+  schema: z.object({
+    title: z.string(),
+    /** One line, shown in the register and under the title on the article. */
+    summary: z.string(),
+    /** The role, in the meta voice: "Founder · engineer". */
+    role: z.string(),
+    /** Years as printed on the right of the register row: "2020 —". */
+    years: z.string(),
+    /** The one place a reader can still find the company, if anywhere. */
+    link: z.string().url().optional(),
+    /** What that link says. Defaults to "Visit". */
+    linkLabel: z.string().optional(),
+    /** Display order, lowest first. */
+    order: z.number().default(0),
+    draft: z.boolean().default(false),
+  }),
+});
+
+/**
+ * A CAPABILITY is one markdown file in src/content/capabilities/: a discipline
+ * the shop actually covers. It has no route of its own — /capabilities/ renders
+ * them all in order — so the frontmatter is what that page's entry line needs
+ * and the body is the claim plus links to the work that proves it.
+ */
+const capabilities = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/capabilities' }),
+  schema: z.object({
+    title: z.string(),
+    /** One line under the title: what this discipline actually delivers. */
+    summary: z.string(),
+    /** Display order, lowest first. */
+    order: z.number().default(0),
+    /** Image file beside this markdown, printed to the right of the entry. */
+    image: z.string().optional(),
+    /** What that image shows. Required in practice whenever `image` is set. */
+    imageAlt: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, posts, pages, experience, capabilities };
+

@@ -1,13 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { basePath } from '../lib/site';
 ---
 
-<BaseLayout title="Not found" path="/404" noindex>
+<BaseLayout title="Not found" path={basePath('/404')} noindex>
   <section class="hero">
-    <p class="page-eyebrow">404</p>
     <h1>That page isn’t here.</h1>
     <div class="lede">
-      <p>The link is broken or the file moved. <a href="/">Home</a> lists the work.</p>
+      <p>The link is broken or the file moved. <a href={basePath('/')}>Home</a> lists the work.</p>
     </div>
   </section>
 </BaseLayout>

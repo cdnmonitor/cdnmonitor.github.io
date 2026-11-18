@@ -18,7 +18,7 @@ interface Props {
 }
 
 const { project, prev, next } = Astro.props;
-const { title, summary, year, role, tags, link } = project.data;
+const { title, summary, year, role, tags, link, linkLabel } = project.data;
 const { Content } = await render(project);
 
 const meta = [String(year), role, tags.join(' · ')].filter(Boolean);
@@ -26,9 +26,6 @@ const meta = [String(year), role, tags.join(' · ')].filter(Boolean);
 
 <BaseLayout title={title} description={summary} path={projectPath(project)}>
   <article class="article">
-    <p class="page-eyebrow">
-      <a href="/work/">Work</a> <span class="sep">/</span> {year}
-    </p>
     <h1 class="page-title">{title}</h1>
     <p class="page-standfirst">{summary}</p>
 
@@ -42,20 +39,20 @@ const meta = [String(year), role, tags.join(' · ')].filter(Boolean);
 
     {link && (
       <p class="article-link">
-        <a href={link} rel="noopener">Visit</a> <span aria-hidden="true">→</span>
+        <a href={link} rel="noopener"><span class="handle">{linkLabel ?? 'Visit'}</span></a> <span aria-hidden="true">→</span>
       </p>
     )}
 
     {(prev || next) && (
       <nav class="pager" aria-label="More work">
         {prev && (
-          <a class="pager-link" href={projectPath(prev)}>
+          <a class={`pager-link${next ? '' : ' solo'}`} href={projectPath(prev)}>
             <span class="dir">Previous</span>
             <span class="to">{prev.data.title}</span>
           </a>
         )}
         {next && (
-          <a class="pager-link next" href={projectPath(next)}>
+          <a class={`pager-link next${prev ? '' : ' solo'}`} href={projectPath(next)}>
             <span class="dir">Next</span>
             <span class="to">{next.data.title}</span>
           </a>

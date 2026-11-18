@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import { site, socials, primary } from '../site.config';
+import { basePath } from '../lib/site';
 
 export interface Props {
   title: string;
@@ -36,11 +38,17 @@ const year = new Date().getFullYear();
 
     {/* The two faces on the first screen: body and labels. The display line is
         Geist 500, so that weight is preloaded too. */}
-    <link rel="preload" href="/fonts/geist-400.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/geist-500.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/iosevka-charon-700.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={basePath('/fonts/geist-400.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={basePath('/fonts/geist-500.woff2')} as="font" type="font/woff2" crossorigin />
 
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={basePath('/favicon.svg')} type="image/svg+xml" />
+
+    {/* Page transitions. Cross-document View Transitions (the CSS-only route)
+        are Chrome-only today — Firefox and Safari skip the rule — so the router
+        fetches the next page and runs the swap inside
+        document.startViewTransition, which Gecko and WebKit both support. It is
+        the only script on the site, and every link still works without it. */}
+    <ClientRouter />
 
     <style is:inline>
       /* Anti-flash base: the stylesheet is inlined after this, but the page
@@ -52,14 +60,13 @@ const year = new Date().getFullYear();
   <body>
     <div class="shell">
       <header class="site-head">
-        <a class="wordmark" href="/">{site.name}</a>
+        <a class="wordmark" href={basePath('/')}>{site.name}</a>
         <nav class="site-nav" aria-label="Primary">
           {primary.map((link) => (
             <a href={link.href} aria-current={path.startsWith(link.href) ? 'page' : undefined}>
               {link.label}
             </a>
           ))}
-          <a href={`mailto:${site.email}`}>Email</a>
         </nav>
       </header>
 

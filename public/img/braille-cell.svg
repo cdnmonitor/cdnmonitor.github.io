@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 248 308" width="248" height="308" role="img" aria-label="One braille cell on a small backplate: two columns of three pins. Pins one, two, three and five are raised, which is the letter r.">
+<rect x="30" y="30" width="188" height="248" rx="26" fill="#ffffff" stroke="#0a0a0a" stroke-width="1.8"/>
+<circle cx="94" cy="94" r="18" fill="#0a0a0a"/>
+<circle cx="154" cy="94" r="18" fill="#dcdcdc"/>
+<circle cx="94" cy="154" r="18" fill="#0a0a0a"/>
+<circle cx="154" cy="154" r="18" fill="#0a0a0a"/>
+<circle cx="94" cy="214" r="18" fill="#0a0a0a"/>
+<circle cx="154" cy="214" r="18" fill="#dcdcdc"/>
+</svg>

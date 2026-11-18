@@ -1,18 +1,38 @@
 ---
-title: Two 3090s, three engines, and one router
-summary: Serving a 763B model from consumer hardware that also has to be a gaming PC — the architecture, the measurements, and four bugs that all looked like the model failing.
+title: One machine, every model, and no cloud bill
+summary: The decision to host the models at home. What it bought, what it cost, and the four failures that all looked like the model was broken.
 date: 2026-11-14
 tags:
+  - Self-hosting
   - LLM infrastructure
   - GGUF
   - CUDA
   - Measurement
 ---
 
-There is one machine in this house with GPUs in it. It is a Threadripper 9970X
-with 125 GB of RAM, two RTX 3090s, and a job description that changes depending
-on who asks: it is a development box, an inference server, and the PC someone
-uses to play games on a Windows VM.
+![Inside the host: two RTX 3090s filling the right of the case, a Corsair HX1500i power supply on the left, and the CPU water block between them.](local-llm-stack-gpus.jpg)
+
+## The decision
+
+Every model I use runs on a machine in this house: no API keys, no per-token
+bill, no provider that can swap the weights underneath me between one Tuesday
+and the next.
+
+What that bought is not free inference. It is the ability to answer questions a
+cloud console cannot: what a quant actually costs in quality, what a driver
+rebind does to CUDA, how much of "the model is slow" is measurement error. Those
+answers only exist because I can break this box, measure it, and put it back.
+
+What it cost is a permanent constraint: one machine, 48 GB of VRAM, one model
+resident at a time, a 25–80 second swap when the model changes, and a box that
+has to hand its GPUs to a Windows VM when someone wants to play a game. The rest
+of this piece is that constraint, and what survived it.
+
+## The machine, and the tension
+
+It is a Threadripper 9970X with 125 GB of RAM, two RTX 3090s, and a job
+description that changes depending on who asks: a development box, an inference
+server, and the PC someone uses to play games on a Windows VM.
 
 That tension is the whole design. Everything below is a consequence of it.
 
@@ -30,12 +50,12 @@ measured: 28.6 tok/s = 89% of it
 ```
 
 That number ended a lot of tuning. At 89 % of the theoretical ceiling there is
-nothing left in flags, drivers, or firmware — only three structural moves:
+nothing left in flags, drivers, or firmware, only three structural moves:
 amortise the weight read (speculative decoding), read fewer bytes (a smaller
 quant), or split each layer across both cards (a tensor-parallel engine, which
 the GGUF stack is not).
 
-## What actually serves
+## What actually runs
 
 A router called llama-swap sits on `:8081` and speaks the OpenAI API. Clients
 point at one URL and name a model; the router starts the right engine for that
@@ -50,7 +70,7 @@ model, and stops the one before it. Seven entries today:
 | `deepseek-v4.1-flash` | 763B MoE, 277 GB on NVMe | Maya engine, expert cache | 79–90 tok/s |
 | `deepseek-v4.1-flash-abliterated` | same, one shard swapped | Maya engine | 61 avg / 91 peak |
 
-One model is resident at a time. That is not a limitation I picked — 48 GB of
+One model is resident at a time. That is not a limitation I picked: 48 GB of
 VRAM and 125 GB of RAM cannot hold two of these, and pretending otherwise is
 how you end up with two engines fighting over the same cards and both running
 correctly but slowly. Swapping is explicit, it costs 25–80 seconds from NVMe,
@@ -59,11 +79,11 @@ and the router hides it behind the request that triggered it.
 The 763B entry is the one worth explaining, because the arithmetic says it
 should not fit. It does, because only the trunk is resident: the model streams
 experts from a page-cached table on the NVMe, and the engine reports the split
-that matters — 4,226 expert slots in VRAM against 11,134 in RAM, a 0.58 VRAM
+that matters: 4,226 expert slots in VRAM against 11,134 in RAM, a 0.58 VRAM
 hit rate. That ratio, not the model size, is why a 277 GB pack answers at 80+
 tok/s on 48 GB of VRAM. More cards would buy speed here; more RAM would not.
 
-## The same box is a gaming PC
+## The trade: the same box is a gaming PC
 
 One 3090 is on the motherboard, the other is on an external enclosure. Both can
 be handed to a Windows VM with vfio, which is how the machine is a games PC at
@@ -73,8 +93,8 @@ and hands one to the guest.
 
 The failure mode here is instructive because nothing reports it. After a rebind
 from vfio back to `nvidia`, CUDA comes back half-broken: the driver loads, the
-router starts, `/health` returns `200`, a model loads, and every request works
-— at about **4 tok/s**, because the process has silently fallen back to CPU
+router starts, `/health` returns `200`, a model loads, and every request works,
+at about **4 tok/s**, because the process has silently fallen back to CPU
 inference. Service health said fine. Resource state did not.
 
 The fix is a full reset cycle rather than a reboot: unbind both cards, unload
@@ -93,7 +113,7 @@ MTP head, so the build can draft several tokens and verify them in one pass.
 `--spec-type draft-mtp --spec-draft-n-max 3` took decode from 28.5 to
 **66.4 tok/s greedy (2.33×)**, with 70 % draft acceptance, 7 % slower prefill,
 and 3 GB more VRAM. Real traffic settles at 59–61 tok/s, which is the number I
-quote — not the bench peak.
+quote, not the bench peak.
 
 **A different engine for the MoE.** The same GLM weights run 24 tok/s under
 llama.cpp (experts in RAM, layer-sequential) and 54–60 tok/s under Maya, which
@@ -105,7 +125,7 @@ prompts. Two entries, same weights, chosen per request.
 **A smaller quant that is also more accurate.** Moving GLM from vanilla Q2_K
 (144 GB) to UD-IQ3_XXS (120 GB) cut bytes per token by 16 % and gained a
 quality tier at the same time: 21.1 → 24.2 tok/s decode, 482 → 516 prefill, RSS
-103 → 86 GB. The expert split had to be retuned for the new tensor sizes — the
+103 → 86 GB. The expert split had to be retuned for the new tensor sizes. The
 old `--override-tensor` ranges OOM'd device 0. A quant swap that keeps the old
 split produces a deployment that works and runs no faster, which reads as "the
 new weights are no better".
@@ -124,7 +144,7 @@ measuring the layer that was actually failing.
    characters on an "explain in detail" prompt. Nothing was broken; the two
    budgets were fighting.
 3. **Five minutes to first token after every restart.** The router's startup
-   hook preloaded a model whose weights sit on the spinning disks — 28 GB at
+   hook preloaded a model whose weights sit on the spinning disks: 28 GB at
    ~41 MB/s. Pointing the hook at an NVMe-resident model took the wait under a
    minute.
 4. **Correct answers at 4 tok/s.** The vfio fallback above. `nvidia-smi` was
@@ -136,7 +156,7 @@ Each fix was one line in a config; each diagnosis was the hard part.
 ## What production looks like
 
 The router logs every request to SQLite, which is the only source of truth that
-matters — actual traffic, not benchmarks. Across 2,524 requests:
+matters: actual traffic, not benchmarks. Across 2,524 requests:
 
 | Model | Requests | Avg tok/s | Peak tok/s |
 | --- | --- | --- | --- |
@@ -153,7 +173,7 @@ cold-prompt latency plus prefill, not the steady-state decode.
 
 ## What I would change
 
-- **Turn EXPO on.** The four DDR5-5600 modules run at 4800 JEDEC — roughly 17 %
+- **Turn EXPO on.** The four DDR5-5600 modules run at 4800 JEDEC: roughly 17 %
   of memory bandwidth left on the table, on a box where every CPU-offload config
   is bandwidth-bound. It is a BIOS setting and the cheapest speedup available.
 - **Put the router config in git.** It is backed up by `cp config.yaml
@@ -163,7 +183,11 @@ cold-prompt latency plus prefill, not the steady-state decode.
   green. A single check that a request produces 40+ tok/s on the resident model
   would have caught the expensive one in a minute.
 
-I run this because it is the cheapest way to answer questions a cloud console
-cannot: what a quant actually costs in quality, what a driver rebind does to
-CUDA, how much of "the model is slow" is measurement error. If you are hiring
-for infrastructure or ML platform work, the address is in the footer.
+The decision still holds, and the receipts are in this piece: 2,524 logged
+requests, 79–90 tok/s from a 763B model on 48 GB of VRAM, a quantization change
+measured against the same prompt before it shipped. What would end it is not a
+better API. It is the box stopping being a games PC, or the swap becoming the
+thing a user feels. Neither has happened.
+
+If you are hiring for infrastructure or ML platform work, the address is in the
+footer.

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
+import { basePath } from '../lib/site';
 
 /**
  * Standalone pages: every file in src/content/pages except `home`, which is
@@ -17,7 +18,7 @@ const { page } = Astro.props;
 const { Content } = await render(page);
 ---
 
-<BaseLayout title={page.data.title} description={page.data.summary} path={`/${page.id}/`}>
+<BaseLayout title={page.data.title} description={page.data.summary} path={basePath(`/${page.id}/`)}>
   <article class="article">
     <h1 class="page-title">{page.data.heading ?? page.data.title}</h1>
     {page.data.summary && <p class="page-standfirst">{page.data.summary}</p>}

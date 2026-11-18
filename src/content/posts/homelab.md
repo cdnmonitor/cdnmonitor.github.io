@@ -43,7 +43,7 @@ and a new service has to displace an existing one or get its own box.
 reboots for CUDA work, hands both GPUs to a Windows guest on demand, and holds
 hundreds of gigabytes of weights. Any customer-facing service there inherits
 every one of those outages. The public storefront runs on a 7 GB Raspberry Pi
-that has been up for three weeks and draws a few watts — which is exactly the
+that has been up for three weeks and draws a few watts, which is exactly the
 point. Uptime came from choosing the boring host, not from the hardware.
 
 **3. Tunnels instead of port forwards.** Nothing on the LAN accepts inbound
@@ -58,7 +58,7 @@ while being perfectly healthy inside.
 gaming VM has the passed-through GPU, so until Windows boots there is no
 display and no network. A JetKVM sits on the HDMI output with its keyboard and
 mouse attached to the guest as a USB device. The one time I needed it, it saved
-a full physical teardown — and it is the only reason I am comfortable letting
+a full physical teardown, and it is the only reason I am comfortable letting
 that VM be the machine I do CAD work on.
 
 ## What broke, and what it taught
@@ -66,7 +66,7 @@ that VM be the machine I do CAD work on.
 **"Offline" is a status, not a diagnosis.** A node that had been up for months
 read `offline` and a fresh login URL. The machine was healthy; its node key had
 expired. The first lesson of the lab is to check the LAN before believing the
-dashboard — and then to disable key expiry on anything meant to run unattended.
+dashboard, and then to disable key expiry on anything meant to run unattended.
 
 **Hostnames lie.** The box named `lab` is the NAS. The box named `nas` is a
 desktop. A device renamed in the admin console ignores the hostname you pass on
@@ -78,7 +78,7 @@ all three as independent facts.
 served correct answers at four tokens per second because the GPUs had been
 handed to the VM and the process had fallen back to CPU. Nothing in the stack
 called that a fault. The check that works is a measured request, not a status
-code — and that rule now applies to every service here.
+code, and that rule now applies to every service here.
 
 **A NAS with an empty bulk disk is a red flag.** For a while the photo library
 lived on the root SSD while a 1.8 TB disk reported almost no usage. Capacity was
@@ -88,7 +88,7 @@ for "the data is on the big disk." Check `du` on the actual data directory, not
 
 **A WiFi default route with an idle gigabit NIC is a bug, not a preference.**
 Two of the three desktops route over WiFi while a wired port sits unplugged.
-Measuring latency from two vantage points is what proved it — the internet was
+Measuring latency from two vantage points is what proved it. The internet was
 never slow; the first hop was.
 
 ## The gaps, in order of how much they bother me
@@ -122,7 +122,7 @@ strictly more work than designing it in.
 Because the lab is where the failures are cheap. A wrong driver binding costs
 an evening, not a customer. A mis-sized model costs a download, not a contract.
 Every incident above became a runbook, and every runbook came from measurement
-rather than belief — the same habit that makes a production system debuggable.
+rather than belief, the same habit that makes a production system debuggable.
 
 The hardware is the least interesting part. What I would want a reader to take
 from this is the shape of the work: choose the boring host for the thing that

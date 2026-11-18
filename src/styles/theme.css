@@ -23,14 +23,15 @@
   --accent:     #0a0a0a;
   --accent-dim: rgb(0 0 0 / 0.04);
 
-  /* Two voices: Geist reads, Iosevka labels. */
+  /* One voice. Geist reads and labels; Iosevka is kept for code blocks only,
+     where a fixed pitch is doing real work rather than styling a label. */
   --sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --mono: 'Iosevka Charon Mono', ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
-  --meta: var(--mono);
-  --meta-weight: 700;
+  --meta: var(--sans);
+  --meta-weight: 500;
 
-  --meta-size:  0.6875rem;
-  --meta-track: 0.06em;
+  --meta-size:  0.875rem;
+  --meta-track: 0.005em;
 
   /* Display: fluid, weight 500, tight tracking. The confidence comes from
      the weight and the tracking, not from the size. */
@@ -41,6 +42,11 @@
 
   /* Reading column: 36rem of Geist at 16px is ~66 characters. */
   --measure: 36rem;
+
+  /* How far a photograph may run: wider than the reading column, narrower
+     than the page, so a product shot is legible without its backdrop
+     becoming the subject. */
+  --media: 44rem;
 
   /* The page column. Nav, hero, register and footer are all laid out inside
      this and centred, so every left edge is the same line. */

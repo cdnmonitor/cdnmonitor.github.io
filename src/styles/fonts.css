@@ -1,5 +1,5 @@
 /* ============================================================
-   FONTS — Geist reads, Iosevka Charon Mono labels.
+   FONTS — Geist does all the talking; Iosevka sets code.
 
    Both families are static subsets (~10 KB a weight) checked into
    public/fonts, so no network font request and no generator plumbing.
@@ -36,20 +36,12 @@
   src: url('/fonts/geist-600.woff2') format('woff2');
 }
 
-/* Iosevka Charon Mono — labels and code only. 700 carries the labels,
-   400 carries code. */
+/* Iosevka Charon Mono — code only. Geist carries every label now, so the
+   mono face never appears above the fold and is not preloaded. */
 @font-face {
   font-family: 'Iosevka Charon Mono';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
   src: url('/fonts/iosevka-charon-400.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Iosevka Charon Mono';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/fonts/iosevka-charon-700.woff2') format('woff2');
 }
