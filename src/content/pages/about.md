@@ -1,6 +1,6 @@
 ---
 title: About
-heading: About.
+heading: About
 summary: "Software, electronics and machining: the short version."
 ---
 
