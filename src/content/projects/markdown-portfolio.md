@@ -20,7 +20,7 @@ project is a file; the file is the page.
 Every page that has words on it is authored in markdown:
 
 - `src/content/projects/*.md`: one case study each, filename is the URL
-- `src/content/pages/*.md`: standalone routes (`about.md` → `/about/`)
+- `src/content/pages/*.md`: standalone routes (`contact.md` → `/contact/`)
 - `src/content/pages/home.md`: the home page's own copy
 
 Frontmatter carries the metadata a template needs. The build validates it, so a
@@ -40,16 +40,16 @@ tags: [Astro, Markdown, CSS]
 ## How a file becomes a page
 
 The content layer is Astro's collection loader. `src/content.config.ts` declares
-two collections and their schemas; `src/pages/work/[slug].astro` turns each
-published project into `/work/<filename>/`. Nothing enumerates the projects by
+two collections and their schemas; `src/pages/projects/[slug].astro` turns each
+published project into `/projects/<filename>/`. Nothing enumerates the projects by
 hand. The register, the count in its header and the previous/next pager all read
 the same sorted list.
 
 | Route | Source | Built by |
 | --- | --- | --- |
 | `/` | `pages/home.md` + project list | `index.astro` |
-| `/work/` | project list | `work/index.astro` |
-| `/work/<slug>/` | `projects/<slug>.md` | `work/[slug].astro` |
+| `/projects/` | project list | `projects/index.astro` |
+| `/projects/<slug>/` | `projects/<slug>.md` | `projects/[slug].astro` |
 | `/<slug>/` | `pages/<slug>.md` | `[...slug].astro` |
 
 ## What ships

@@ -11,10 +11,10 @@ Competent code is a requirement for any business processing money. I co-develope
 that has clean IPs. I have developed the wpm website, the desktop app for
 peripheral products, and the firmware for the type65. I developed code used in
 workshops to help students control a
-[Boston Dynamics robot](/work/spot-workshop/) as well.
+[Boston Dynamics robot](/projects/spot-workshop/) as well.
 
 To fund wpm, I developed tools that made money from detection tools to automation
 tools.
 
 This site is one of those tools. Markdown in, static HTML out, no framework in the
-browser: [markdown-portfolio](/work/markdown-portfolio/).
+browser: [markdown-portfolio](/projects/markdown-portfolio/).

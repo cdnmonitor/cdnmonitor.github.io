@@ -1,5 +1,5 @@
 /**
- * Markdown links and images are authored root-absolute (`/work/`, `/img/x.svg`)
+ * Markdown links and images are authored root-absolute (`/projects/`, `/img/x.svg`)
  * because that is how they read. A GitHub Pages project site is served from a
  * sub-path, so every one of them would 404 unless it carries the deploy base.
  *

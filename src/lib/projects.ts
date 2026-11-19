@@ -4,7 +4,7 @@ import { basePath } from './site';
 export type Project = CollectionEntry<'projects'>;
 /* ---------- path helpers: the entry id IS the url path ---------- */
 
-export const projectPath = (project: Project) => basePath(`/work/${project.id}/`);
+export const projectPath = (project: Project) => basePath(`/projects/${project.id}/`);
 
 /* ---------- ordering ---------- */
 

@@ -18,11 +18,11 @@ export const site = {
 
 /** Fixed links in the top bar. Each collection has its own index route. */
 export const primary = [
-  { label: 'Work', href: basePath('/work/') },
-  { label: 'Capabilities', href: basePath('/capabilities/') },
+  { label: 'Projects', href: basePath('/projects/') },
+  { label: 'Skills', href: basePath('/skills/') },
   { label: 'Experience', href: basePath('/experience/') },
   { label: 'Blog', href: basePath('/blog/') },
-  { label: 'About', href: basePath('/about/') },
+  { label: 'Contact me', href: basePath('/contact/') },
 ] as const;
 
 /** Rendered in the footer. */

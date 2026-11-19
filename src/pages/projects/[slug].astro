@@ -44,7 +44,7 @@ const meta = [String(year), role, tags.join(' · ')].filter(Boolean);
     )}
 
     {(prev || next) && (
-      <nav class="pager" aria-label="More work">
+      <nav class="pager" aria-label="More projects">
         {prev && (
           <a class={`pager-link${next ? '' : ' solo'}`} href={projectPath(prev)}>
             <span class="dir">Previous</span>

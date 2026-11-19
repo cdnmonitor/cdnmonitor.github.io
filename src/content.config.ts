@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders';
 
 /**
  * A PROJECT is one markdown file in src/content/projects/.
- * The filename is the URL: `projects/type65.md` becomes `/work/type65/`.
+ * The filename is the URL: `projects/type65.md` becomes `/projects/type65/`.
  * Frontmatter is the metadata that appears in the register; the body is the
  * case study itself.
  */
@@ -90,7 +90,7 @@ const experience = defineCollection({
 
 /**
  * A CAPABILITY is one markdown file in src/content/capabilities/: a discipline
- * the shop actually covers. It has no route of its own — /capabilities/ renders
+ * the shop actually covers. It has no route of its own — /skills/ renders
  * them all in order — so the frontmatter is what that page's entry line needs
  * and the body is the claim plus links to the work that proves it.
  */

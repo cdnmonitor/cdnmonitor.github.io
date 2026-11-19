@@ -5,7 +5,7 @@ import { basePath } from '../lib/site';
 
 /**
  * Standalone pages: every file in src/content/pages except `home`, which is
- * the home page's copy. pages/about.md becomes /about/.
+ * the home page's copy. pages/contact.md becomes /contact/.
  */
 export async function getStaticPaths() {
   const pages = await getCollection('pages', ({ data }) => !data.draft);
