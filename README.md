@@ -32,7 +32,12 @@ markdown-portfolio/
 │   └── site.config.ts       # name, email, nav, socials, canonical origin
 ├── public/
 │   ├── fonts/               # subset woff2 (checked in — no font requests to a CDN)
-│   └── favicon.svg
+│   ├── favicon.ico          # the mark: the photographed green m, cropped square
+│   ├── favicon-16x16.png    # same mark at the three sizes browsers ask for
+│   ├── favicon-32x32.png
+│   ├── favicon-48x48.png
+│   └── apple-touch-icon.png # 180px home-screen icon
+├── scripts/                 # favicon.mjs crops/resamples the photo; favicon-source.png is the photo
 └── astro.config.mjs
 ```
 
@@ -44,6 +49,7 @@ pnpm dev        # http://localhost:4321
 pnpm build      # static output in dist/
 pnpm preview    # serve dist/
 pnpm check      # astro check — types + content schemas
+pnpm favicon    # redraw public/favicon*.svg + the two PNG icons
 ```
 
 Node 20.3+ (or 22) is required. This repo uses pnpm 12; build approvals for

@@ -41,7 +41,15 @@ const year = new Date().getFullYear();
     <link rel="preload" href={basePath('/fonts/geist-400.woff2')} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={basePath('/fonts/geist-500.woff2')} as="font" type="font/woff2" crossorigin />
 
-    <link rel="icon" href={basePath('/favicon.svg')} type="image/svg+xml" />
+    {/* Icon: the photograph of the green m, cropped and squared in
+        scripts/favicon.mjs. Raster only — a photo has no vector form — so the
+        set is the .ico browsers probe for, the three PNG sizes they ask for,
+        and the 180px apple-touch icon for the home screen. */}
+    <link rel="icon" href={basePath('/favicon.ico')} sizes="any" />
+    <link rel="icon" href={basePath('/favicon-16x16.png')} sizes="16x16" type="image/png" />
+    <link rel="icon" href={basePath('/favicon-32x32.png')} sizes="32x32" type="image/png" />
+    <link rel="icon" href={basePath('/favicon-48x48.png')} sizes="48x48" type="image/png" />
+    <link rel="apple-touch-icon" href={basePath('/apple-touch-icon.png')} />
 
     {/* Page transitions. Cross-document View Transitions (the CSS-only route)
         are Chrome-only today — Firefox and Safari skip the rule — so the router
