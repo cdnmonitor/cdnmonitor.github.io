@@ -32,12 +32,13 @@ markdown-portfolio/
 │   └── site.config.ts       # name, email, nav, socials, canonical origin
 ├── public/
 │   ├── fonts/               # subset woff2 (checked in — no font requests to a CDN)
-│   ├── favicon.ico          # the mark: the photographed green m, cropped square
-│   ├── favicon-16x16.png    # same mark at the three sizes browsers ask for
+│   ├── favicon.svg          # the mark: the 16x16 login glyph, drawn as rects
+│   ├── favicon.ico          # same grid, for browsers that still probe for it
+│   ├── favicon-16x16.png    # and at the three PNG sizes they ask for
 │   ├── favicon-32x32.png
 │   ├── favicon-48x48.png
-│   └── apple-touch-icon.png # 180px home-screen icon
-├── scripts/                 # favicon.mjs crops/resamples the photo; favicon-source.png is the photo
+│   └── apple-touch-icon.png # 180px home-screen icon, flattened onto white
+├── scripts/                 # favicon.mjs draws the icons; favicon-source.png is the art
 └── astro.config.mjs
 ```
 
