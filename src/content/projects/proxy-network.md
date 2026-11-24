@@ -1,6 +1,6 @@
 ---
-title: Personal proxy network
-summary: 'The exits, the service that runs them, and the dashboard in front of it: a proxy network I control end to end.'
+title: Cellular Proxy Network
+summary: A proxy network that uses cellular networks to pull clean IPs, costs less than 200 dollars, and has high profit potential
 year: 2026
 role: Design + engineering
 tags:

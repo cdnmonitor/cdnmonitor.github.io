@@ -1,6 +1,6 @@
 ---
 title: Chapman University
-summary: Maintaining a makerspace's machines, and teaching the students who use them.
+summary: Managed and maintained FDM, SLA, SLS, and CNC machines while mentoring students.
 role: Makerspace Technician
 years: 'Jan 2024 to June 2024'
 order: 2

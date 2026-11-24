@@ -1,6 +1,6 @@
 ---
 title: markdown-portfolio
-summary: 'A portfolio whose pages are plain markdown files: Astro content collections, one inlined stylesheet, and a router that animates navigation.'
+summary: A website design that takes markdown and english into a high speed pre rendered website
 year: 2026
 role: Design + engineering
 tags:

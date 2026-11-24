@@ -1,6 +1,6 @@
 ---
 title: Vanish Proxies
-summary: Residential, datacenter and private subnet IPs sold to the sneaker reselling trade, with the storefront, delivery and billing built from scratch.
+summary: Started a proxy company that supplied residential proxies, datacenter proxies, and subnet allocations to over 1400 customers.
 role: Founder
 years: '2020 to 2022'
 order: 4

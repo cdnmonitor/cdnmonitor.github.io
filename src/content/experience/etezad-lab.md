@@ -1,6 +1,6 @@
 ---
 title: Etezad Research Lab
-summary: Chaining refreshable braille cells into a dot grid that can render pictures, in Chapman University’s assistive-technology lab.
+summary: Developed a braille display that does pixel art and received two publications for the design of it.
 role: Research assistant · Chapman University
 years: '2023'
 order: 3

@@ -1,5 +1,5 @@
 ---
-title: Pixel art braille display
+title: Pixel Art Compatible Braille Display
 summary: Chaining refreshable braille cells into one 8 × 9 dot field, so a display can draw a shape and not only spell a word.
 year: 2023
 role: Research + design

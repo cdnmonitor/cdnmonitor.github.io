@@ -1,6 +1,6 @@
 ---
-title: SPOT control environment
-summary: The Makerspace had a Boston Dynamics SPOT and no way for a student to drive it. I designed the environment students write against; they turned it into a workshop.
+title: Boston Dynamics Student Workshop
+summary: A Github project used to teach college students introductions to Object Orientation, Python, and using Boston Dynamics in a short period
 year: 2024
 role: Design + tooling
 tags:

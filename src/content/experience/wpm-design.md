@@ -1,6 +1,6 @@
 ---
 title: wpm design
-summary: A workshop, a supply chain inside Southern California, and the rules the business runs on.
+summary: A hardware startup in California that machines full metal mechanical keyboards in house.
 role: Founder · Engineer
 years: '2020 to present'
 order: 1
