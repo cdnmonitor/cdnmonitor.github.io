@@ -21,12 +21,11 @@ markdown-portfolio/
 ├── src/
 │   ├── content/
 │   │   ├── projects/        # one case study per file → /work/<filename>/
-│   │   ├── posts/           # one blog post per file → /blog/<filename>/
 │   │   └── pages/           # standalone routes → /<filename>/ (home.md is the home page)
-│   ├── pages/               # routes: index, work/, work/[slug], blog/, blog/[slug], [...slug], 404
+│   ├── pages/               # routes: index, projects/, experience/, skills/, [...slug], 404
 │   ├── components/          # Row — one register row, used by work and writing
 │   ├── layouts/             # BaseLayout — head, header, footer
-│   ├── lib/                 # projects.ts, posts.ts (read + order), site.ts (shared helpers)
+│   ├── lib/                 # projects.ts, experience.ts (read + order), site.ts (shared helpers)
 │   ├── styles/              # theme.css (tokens), fonts.css (@font-face), global.css
 │   ├── content.config.ts    # collection schemas
 │   └── site.config.ts       # name, email, nav, socials, canonical origin
@@ -84,27 +83,8 @@ A colocated image (`![alt](./photo.png)` next to the markdown file) goes through
 Astro's asset pipeline: WebP, hashed URL, intrinsic width/height. A leading-slash
 path (`/img/photo.png`) is copied from `public/` untouched.
 
-## Adding a post
-
-Create `src/content/posts/<slug>.md` → `/blog/<slug>/`. The home page shows the
-three newest, `/blog/` shows all of them, and both derive their counts from the
-directory.
-
-```yaml
----
-title: Seven machines, one flat network
-summary: One line for the register and for search results.
-date: 2026-11-12
-tags: [Homelab, Networking]
-standfirst: Optional longer line under the title.
-draft: false
----
-
-Body in plain markdown. `##` headings, tables, lists, code.
-```
-
-Reading time is computed from the body. Data tables wider than the reading
-measure break out to the page width automatically — no markup needed.
+Data tables wider than the reading measure break out to the page width
+automatically — no markup needed.
 
 ## Adding a page
 

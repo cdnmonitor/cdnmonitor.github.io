@@ -21,7 +21,6 @@ export const primary = [
   { label: 'Projects', href: basePath('/projects/') },
   { label: 'Skills', href: basePath('/skills/') },
   { label: 'Experience', href: basePath('/experience/') },
-  { label: 'Blog', href: basePath('/blog/') },
   { label: 'Contact me', href: basePath('/contact/') },
 ] as const;
 

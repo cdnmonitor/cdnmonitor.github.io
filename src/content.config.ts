@@ -30,24 +30,6 @@ const projects = defineCollection({
 });
 
 /**
- * A POST is one markdown file in src/content/posts/.
- * Filename is the URL: `posts/homelab.md` -> `/blog/homelab/`.
- */
-const posts = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/posts' }),
-  schema: z.object({
-    title: z.string(),
-    summary: z.string(),
-    /** Publication date; also the sort key. */
-    date: z.coerce.date(),
-    tags: z.array(z.string()).default([]),
-    /** Optional one-line standfirst override (defaults to summary). */
-    standfirst: z.string().optional(),
-    draft: z.boolean().default(false),
-  }),
-});
-
-/**
  * A PAGE is a standalone route: src/content/pages/about.md -> `/about/`.
  * The id `home` is special-cased: it is the home page's copy, not a route.
  */
@@ -110,5 +92,5 @@ const capabilities = defineCollection({
   }),
 });
 
-export const collections = { projects, posts, pages, experience, capabilities };
+export const collections = { projects, pages, experience, capabilities };
 
