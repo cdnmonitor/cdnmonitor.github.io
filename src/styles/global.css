@@ -539,6 +539,14 @@ main { flex: 1 1 auto; }
   max-height: none;
 }
 
+/* A scanned document is read, not looked at: at the 30rem cap this notice drops
+   to 388px wide and its fields stop being legible. It keeps its natural width
+   instead, which is the only size the black redactions actually prove
+   anything. */
+.prose img[src*='lumen-connection-notice'] {
+  max-height: none;
+}
+
 .prose hr {
   height: 1px;
   margin: 2.75em 0;

@@ -36,6 +36,8 @@ well as the individual administrators behind these ecommerce shops would often b
 subnets depending on the traffic, so checking the subnet and preparing backups was
 a common practice.
 
+![A Lumen service connection notice addressed to Michael at Monitored Solutions LLC: the commencement letter for a colocation cabinet and a dedicated internet circuit in Herndon, Virginia, with the order, billing account, customer, service and circuit numbers redacted.](lumen-connection-notice.png)
+
 ### Private subnets
 
 Some of Vanish’s clients were operating reselling and botting businesses in large
