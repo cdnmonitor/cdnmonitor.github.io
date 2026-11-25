@@ -9,6 +9,7 @@ tags:
   - CSS
   - Static site
 order: 1
+draft: true
 ---
 
 This site is a directory of markdown files compiled into static HTML. There is

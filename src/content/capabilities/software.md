@@ -17,4 +17,4 @@ To fund wpm, I developed tools that made money from detection tools to automatio
 tools.
 
 This site is one of those tools. Markdown in, static HTML out, no framework in the
-browser: [markdown-portfolio](/projects/markdown-portfolio/).
+browser: markdown-portfolio.
