@@ -53,15 +53,3 @@ Two papers came out of the work:
   Chapman University, 2023.
 - **Bishai**, Sun, Parlette, Etezad. “AI Powered Web Shape to Braille for the
   Visually Impaired.” 38th Annual CSUN Assistive Technology Conference, Anaheim.
-
-[Add: what happened after the papers: was any of it picked up, tested with
-users, or built into a second revision?]
-
-## What it cost
-
-[Add: the honest numbers or the honest absence of them: what the parts were,
-what the lab time came to, what broke, what you would not do again.]
-
-The figures on this page are drawn from the same pin geometry as the display,
-generated rather than illustrated, so what you see is what the cells can
-actually hold.
